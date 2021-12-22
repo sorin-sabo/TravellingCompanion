@@ -84,7 +84,7 @@ class UserManager(models.Manager):
         """
 
         if user_id is None and email is None:
-            return False
+            return None
 
         # Check user exists by id
         if user_id is not None:

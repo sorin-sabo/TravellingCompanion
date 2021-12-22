@@ -3,10 +3,17 @@ from drf_yasg.utils import swagger_auto_schema
 
 # Rest Framework
 from rest_framework import generics, status
+from rest_framework.exceptions import ValidationError
 
 # Local App
-from apps.travel.models import Trip, Passenger, TripPassenger
-from apps.travel.serializers import TripListSerializer, TripSaveSerializer
+from apps.travel.models import Trip, Passenger
+from apps.travel.serializers import (
+    TripListSerializer,
+    TripSaveSerializer,
+    TripDetailsSerializer
+)
+from apps.travel.decorators import passenger_has_access_to_trip
+from apps.travel.services import get_user_trips
 
 
 class TripView(generics.ListCreateAPIView):
@@ -25,35 +32,7 @@ class TripView(generics.ListCreateAPIView):
         a passenger of.
         """
 
-        # Init final trip ids
-        trip_ids = []
-
-        # Get trips request user is a passenger of
-        passenger = Passenger.objects.filter(
-            user_id=self.request.user.id
-        ).first()
-
-        if passenger is not None:
-            passenger_trips = TripPassenger.objects.filter(passenger_id=passenger.id)
-            trip_ids = [trip.id for trip in passenger_trips]
-
-        # Get trips request user created
-        # (One could have removed himself but he can still manage trip)
-
-        trips_owner = Trip.objects.filter(
-            created_by=self.request.user
-        )
-        trip_owner_ids = [trip.id for trip in trips_owner]
-        trip_ids += trip_owner_ids
-
-        # Keep only unique records
-        trip_ids = list(set(trip_ids))
-
-        return (
-            Trip
-            .objects
-            .filter(id__in=trip_ids)
-        )
+        return get_user_trips(self.request.user)
 
     def get_serializer_class(self):
         if self.request.method in ['GET', 'HEAD', 'OPTIONS']:
@@ -93,3 +72,82 @@ class TripView(generics.ListCreateAPIView):
             updated_by=self.request.user,
             passengers=passengers
         )
+
+
+class TripDetailsView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    Trip details
+
+    * Authorization: Only logged in passenger users can get/update/delete trips.
+    * Get/Update/Delete trip by id.
+    * Raises 404 error in case request trip doesn't exist or is not accessible to current user
+    """
+
+    queryset = Trip.objects.all()
+    serializer_class = TripDetailsSerializer
+
+    def get_object(self):
+        return Trip.objects.get(id=self.kwargs.get('trip_id'))
+
+    def validate_before_delete(self):
+        trip = self.get_object()
+
+        if trip.created_by.id != self.request.user.id:
+            raise ValidationError('You cannot remove trip managed by different user.')
+
+    @passenger_has_access_to_trip
+    def get(self, request, *args, **kwargs):
+        """
+        Trip details
+
+        * Only passenger users are authorized to get trip details.
+        * Get trip by id.
+        * Raises 404 error in case request trip doesn't exist or is not accessible
+        """
+
+        response = super().get(request, *args, **kwargs)
+        return response
+
+    @passenger_has_access_to_trip
+    def put(self, request, *args, **kwargs):
+        """
+        Trip update
+
+        * Only passenger users are authorized to update trip details.
+        * Update trip by id.
+        * Returns trip details updated by id
+        * Raises 404 error in case request trip doesn't exist or is not accessible
+        """
+
+        response = super().put(request, *args, **kwargs)
+        return response
+
+    @passenger_has_access_to_trip
+    def patch(self, request, *args, **kwargs):
+        """
+        Trip partial update
+
+        * Only passenger users are authorized to partial update trip details.
+        * Partially update trip by id.
+        * Returns trip details updated by id
+        * Raises 404 error in case request trip doesn't exist or is not accessible
+        """
+
+        response = super().patch(request, *args, **kwargs)
+        return response
+
+    @passenger_has_access_to_trip
+    def delete(self, request, *args, **kwargs):
+        """
+        Trip delete
+
+        * Only passenger users are authorized to partial delete trip(s).
+        * Delete trip by id.
+        * Returns empty response with status 204
+        * Raises 400 error in case trip to be deleted is owner by a different user.
+        * Raises 404 error in case request trip doesn't exist or is not accessible
+        """
+
+        self.validate_before_delete()
+        response = super().delete(request, *args, **kwargs)
+        return response

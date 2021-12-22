@@ -47,14 +47,11 @@ class TripListSerializer(serializers.ModelSerializer):
         decimal_places=2,
         coerce_to_string=False
     )
-    passengers = TripPassengerSerializer(many=True)
-    destinations = TripDestinationSerializer(many=True)
 
     class Meta:
         model = Trip
         fields = (
-            'name', 'cost', 'start_date', 'end_date',
-            'destinations', 'passengers'
+            'id', 'uuid', 'name', 'cost', 'start_date', 'end_date'
         )
 
 
@@ -104,3 +101,24 @@ class TripSaveSerializer(serializers.ModelSerializer):
                     )
 
         return attrs
+
+
+class TripDetailsSerializer(serializers.ModelSerializer):
+    """
+    Trip Details serializer
+    """
+
+    cost = serializers.DecimalField(
+        max_digits=20,
+        decimal_places=2,
+        coerce_to_string=False
+    )
+    passengers = TripPassengerSerializer(many=True)
+    destinations = TripDestinationSerializer(many=True)
+
+    class Meta:
+        model = Trip
+        fields = (
+            'id', 'uuid', 'name', 'cost', 'start_date', 'end_date',
+            'destinations', 'passengers'
+        )

@@ -1,5 +1,5 @@
 """
-Advisor API Endpoints
+Trip API Endpoints
 All endpoints are prefixed with {{apiUrl}}/api/travel/
 """
 
@@ -15,6 +15,12 @@ urlpatterns = [
         route='trips/',
         view=views.TripView.as_view(),
         name='trips'
+    ),
+
+    path(
+        route='trips/<int:trip_id>/',
+        view=views.TripDetailsView.as_view(),
+        name='trip_details'
     ),
 
     path(

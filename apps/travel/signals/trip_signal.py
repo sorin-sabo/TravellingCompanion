@@ -62,7 +62,7 @@ def send_email_notification_on_trip_update(sender, instance, **kwargs):
                     message=trip_details,
                     from_email=settings.SERVER_EMAIL,
                     recipient_list=passenger_emails,
-                    fail_silently=False
+                    fail_silently=True
                 )
             except TransactionError as exc:
                 logger.error('Exception occurred saving event %s', str(exc))

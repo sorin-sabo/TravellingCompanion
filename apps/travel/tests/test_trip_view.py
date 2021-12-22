@@ -67,3 +67,13 @@ class TestTripCRUD(APITestCase):
         trip = response.data[0]
         self.assertEqual(trip['name'], self.trip.name)
         self.assertEqual(trip['cost'], self.trip.cost)
+
+    def test_trip_save(self):
+        """
+        Test trip save
+
+        - Ensure trip is saved successfully;
+        - Ensure response data has the right structure;
+        - Ensure response data is expected one
+        """
+        
