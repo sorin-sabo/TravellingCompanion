@@ -1,0 +1,98 @@
+from TravellingCompanion.settings.configurations import config
+
+# ------------------------------------- DEBUG CONFIGURATION ----------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#debug
+DEBUG = True
+# ------------------------------------- END DEBUG CONFIGURATION ------------------------------------
+
+# ------------------------------------- HOST CONFIGURATION -----------------------------------------
+# See: https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost'
+]
+# ------------------------------------- END HOST CONFIGURATION -------------------------------------
+
+# ------------------------------------- SECURITY_MIDDLEWARE ----------------------------------------
+SECRET_KEY = config.get('SECRET_KEY')
+SESSION_COOKIE_SECURE = False  # NO HTTPS
+CSRF_COOKIE_SECURE = False  # NO HTTPS
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = False
+SECURE_HSTS_PRELOAD = False
+SECURE_SSL_REDIRECT = False
+SECURE_REFERRER_POLICY = 'origin'
+# ------------------------------------- END SECURITY_MIDDLEWARE ------------------------------------
+
+# ------------------------------------- DATABASE CONFIGURATION -------------------------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': config.get('DATABASE_NAME'),
+        'USER': config.get('DATABASE_USER'),
+        'PASSWORD': config.get('DATABASE_PASSWORD'),
+        'HOST': config.get('DATABASE_HOST'),
+        'PORT': config.get('DATABASE_PORT'),
+        'TEST': {
+            'NAME': config.get('TEST_DATABASE_NAME')
+        }
+    }
+}
+
+# ------------------------------------- END DATABASE CONFIGURATION ---------------------------------
+# Authentication domain based on external service used;
+# e.g. AWS Cognito - user pool; Auth0 - https://{AUTH0_DOMAIN}
+AUTH_DOMAIN = config.get('AUTH_DOMAIN')
+# Jwt issuer based on external service used;
+# e.g. AWS Cognito - user pool; Auth0 - https://{AUTH0_DOMAIN}
+JWT_ISSUER = config.get('AUTH_ISSUER')
+# Jwt guest client id used for extra validation of access token
+JWT_CLIENT = config.get('OAUTH2_CLIENT')
+# -------------------------------------- OAUTH2 CONFIGURATION --------------------------------------
+
+# ---------------------------------------- LOGGING CONFIGURATION -----------------------------------
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'large': {
+#             'format':
+#                 '[%(asctime)s]  %(levelname)s  %(process)d  %(pathname)s  %(funcName)s  %(message)s'
+#         },
+#         'tiny': {
+#             'format': '[%(asctime)s] %(levelname)s %(message)s  ',
+#             'datefmt': "%d/%b/%Y %H:%M:%S"
+#         },
+#         'standard': {
+#             'format': "[%(asctime)s] %(levelname)s %(message)s",
+#             'datefmt': "%d/%b/%Y %H:%M:%S"
+#         },
+#     },
+#     'handlers': {
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.handlers.RotatingFileHandler',
+#             'filename': 'logs/rest_api.log',
+#             'formatter': 'standard',
+#         },
+#         # 'mail_admins': {
+#         #     'level': 'ERROR',
+#         #     'class': 'django.utils.log.AdminEmailHandler',
+#         #     'include_html': True,
+#         # }
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#         # 'django.request': {
+#         #     'handlers': ['mail_admins'],
+#         #     'level': 'ERROR',
+#         #     'propagate': False
+#         # },
+#     },
+# }
+LOGGING = {}
+# -------------------------------------- END LOGGING CONFIGURATION ---------------------------------

@@ -1,0 +1,29 @@
+[
+  {
+    "model": "travel.passenger",
+    "pk": 1,
+    "fields": {
+      "uuid": "9f5ad7ef-2c8f-490d-a455-3686dc6c5ad9",
+      "first_name": "Demo",
+      "last_name": "Passenger",
+      "email": "demo@travel.com",
+      "user_id": 1
+    }
+  },
+    {
+    "model": "travel.destination",
+    "pk": 1,
+    "fields": {
+      "code": "NY",
+      "name": "New York"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 2,
+    "fields": {
+      "code": "LONDON",
+      "name": "London"
+    }
+  }
+]

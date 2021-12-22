@@ -1,0 +1,22 @@
+### Python ###
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+.env
+.env.*
+
+### Python venv ###
+venv/
+
+### Local Project ###
+TravellingCompanion/settings/environments/local.py
+TravellingCompanion/configurations/config.py
+
+### Django ###
+*.log
+*.pot
+*.pyc
+*.db
+
+### PyCharm ###
+*.idea/

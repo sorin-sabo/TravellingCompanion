@@ -1,0 +1,73 @@
+[
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "passenger",
+      "permissions": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ]
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+      "is_superuser": false,
+      "email": "demo@travel.com",
+      "is_staff": false,
+      "status": true
+    },
+    "groups": [
+      1
+    ]
+  },
+    {
+    "model": "travel.passenger",
+    "pk": 1,
+    "fields": {
+      "uuid": "9f5ad7ef-2c8f-490d-a455-3686dc6c5ad9",
+      "first_name": "Demo",
+      "last_name": "Passenger",
+      "email": "demo@travel.com",
+      "user_id": 1
+    }
+  },
+    {
+    "model": "travel.destination",
+    "pk": 1,
+    "fields": {
+      "code": "NY",
+      "name": "New York"
+    }
+  },
+  {
+    "model": "travel.destination",
+    "pk": 2,
+    "fields": {
+      "code": "LONDON",
+      "name": "London"
+    }
+  },
+  {
+    "model": "travel.trip",
+    "pk": 1,
+    "fields": {
+      "cost": 10000,
+      "name": "Test",
+      "start_date": "2022-01-01",
+      "created_by": 1
+    }
+  }
+]

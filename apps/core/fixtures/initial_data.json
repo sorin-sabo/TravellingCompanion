@@ -1,0 +1,47 @@
+[
+  {
+    "model": "auth.group",
+    "pk": 1,
+    "fields": {
+      "name": "passenger",
+      "permissions": [
+        41,
+        42,
+        43,
+        44,
+        45,
+        46,
+        47,
+        48,
+        49,
+        50,
+        51,
+        52
+      ]
+    }
+  },
+  {
+    "model": "core.user",
+    "pk": 1,
+    "fields": {
+      "is_superuser": false,
+      "email": "demo@travel.com",
+      "is_staff": false,
+      "status": true
+    },
+    "groups": [
+      1
+    ]
+  },
+  {
+    "model": "core.user",
+    "pk": 2,
+    "fields": {
+      "is_superuser": true,
+      "email": "admin@travel.com",
+      "is_staff": true,
+      "password": "pbkdf2_sha256$320000$O0wX2lMkrbIxQ9Tq0yvxCU$AZ283nOxOOfnzym+irtJqyOC6jy/QYfAttJSZdFHINQ=",
+      "status": true
+    }
+  }
+]
