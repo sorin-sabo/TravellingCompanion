@@ -9,8 +9,8 @@ __pycache__/
 venv/
 
 ### Local Project ###
-TravellingCompanion/settings/environments/local.py
-TravellingCompanion/configurations/config.py
+app/TravellingCompanion/settings/environments/local.py
+app/TravellingCompanion/configurations/config.py
 
 ### Django ###
 *.log

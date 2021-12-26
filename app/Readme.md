@@ -3,8 +3,9 @@
 ## Requirements
 
 It is assumed that:
--   You have Docker installed. If not, download the latest versions from:
-    * [Docker](https://www.docker.com/products/docker-desktop)
+-   You have Python and MySQL installed. If not, then download the latest versions from:
+    * [Python](https://www.python.org/downloads/)
+    * [PostgreSQL](https://www.postgresql.org/download/)
 
 ## Installation
 
@@ -13,73 +14,85 @@ It is assumed that:
    git clone https://github.com/sorin-sabo/TravellingCompanion.git
    ```
 
-2. **Add environment variables**
-   - Create file `.env.prod` in project root directory
-   - Fill in next environment variables. The ones filled in bellow can be kept,
-     but the ones with no value must be filled:
-    ```.dotenv
-    ENV_ID=development
-    SECRET_KEY=demo
-    
-    AUTH_DOMAIN=
-    AUTH_ISSUER=
-    OAUTH2_GUEST=
-    OAUTH2_CLIENT=
-    
-    SQL_ENGINE=django.db.backends.postgresql
-    SQL_DATABASE=travel_db
-    SQL_USER=demo
-    SQL_PASSWORD=demo
-    SQL_HOST=db
-    SQL_PORT=5432
-    SQL_TEST_DATABASE=test_travel_db
-    DATABASE=postgres
-    ```
-   - Create file `.env.prod.db`
-   - Fill in next environment variables. The ones filled in bellow can be kept.
-     Make sure that you are using same database connection parameters as above
-     in case you change sample ones:
-    ```.dotenv
-    POSTGRES_USER=demo
-    POSTGRES_PASSWORD=demo
-    POSTGRES_DB=travel_db
-    ```
-
-3. **Share root directory**
-    - Docker setup is made to fully support auto-reload on changes;
-    - Based on docker version and OS used this operation is different:
-        - Windows & OS X:
-          - Docker -> Settings -> Resources -> File Sharing -> Add project root directory;
-        - Linux:
-          - You don't need to do anything. 
-            The daemon runs natively on the Linux host and can directly access 
-            the entire host filesystem with no special setup.
-
-4. **Start image**
+2. **Create virtual environment**
+    - Windows
     ```bash
-    docker-compose up -d --build
+    python -m venv $(pwd)/venv
+    source venv/bin/activate
     ```
-
-5. **Run migrations**
+   
+    - OS X
     ```bash
-    docker-compose exec web python manage.py migrate --noinput
+    python3 -m venv $(pwd)/venv
+    source venv/bin/activate
     ```
 
-6. **Collect static files**
+3. **Install requirements**:
+    - Windows
     ```bash
-    docker-compose exec web python manage.py collectstatic --no-input --clear
+    pip install -r requirements.txt
+    ```
+   
+    - OS X
+    ```bash
+    pip3 install -r requirements.txt
     ```
 
+4. **Change local configurations**
+    - open `TravellingCompanion/settings/configurations/local_config.py`
+    - create a copy of the file and name it `config.py`
+    - fill in your local configurations as fallows:
+        - database configuration should be your local PostgreSQL connection parameters
+
+5. **Create local configuration file**
+    - locate `TravellingCompanion/settings/environments/local.py.template`
+    - make a copy of it
+    - rename it to `local.py`
+
+6. **Migrate tables with initial data included**
+    ```bash 
+    python manage.py migrate
+    ```
 7. **Populate demo data(Optional)**
+   - Windows
    ```bash
-   docker-compose exec web python manage.py loaddata initial_data.json
+   python manage.py loaddata initial_data.json
+   ```
+   
+   - OS X
+   ```bash
+   python3 manage.py loaddata initial_data.json
    ```
 
 ## Run
--   Upon docker run API server starts, and it's exposing:
--   [Endpoints](http://localhost:24/api/)
--   [Documentation](http://localhost:24/docs/)
--   [Administration](http://localhost:24/admin/)
+
+-   Application can run directly from cmd using fallowing command:
+    - Windows
+    ```bash
+    python manage.py runserver
+    ```
+      
+    - OS X
+    ```bash
+    python3 runserver.py runserver
+    ```
+
+-   You can input a port number in case default one (8000) is used:
+    ```bash
+    python manage.py runserver {port_number}
+    ```
+
+-   [Endpoints](http://localhost:8000/api/)
+-   [Documentation](http://localhost:8000/docs/)
+-   [Administration](http://localhost:8000/admin/)
+
+## Check
+
+*   Since 1st Dec 2020, requirement dependency is no longer handled automatically
+*   In order to check any issue run next command:
+    ```bash
+    python -m pip check
+    ```
 
 ## Test
 
@@ -87,7 +100,7 @@ It is assumed that:
     - PLEASE RUN ALL TESTS BEFORE EACH DEPLOY!
     - Using fallowing command:
         ```bash
-        docker-compose exec web python manage.py test --verbosity 2
+        python manage.py test --verbosity 2
         ```
     - Optional `--verbosity` displays more details of test results
     - Above command will create a test database from scratch using migration scripts

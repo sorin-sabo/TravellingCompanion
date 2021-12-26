@@ -55,7 +55,6 @@ class TestTripCRUD(APITestCase):
         # Test response data has the expected structure
         expected_attributes = [
             'name', 'cost', 'start_date', 'end_date',
-            'destinations', 'passengers'
         ]
 
         for trip in response.data:
@@ -68,12 +67,49 @@ class TestTripCRUD(APITestCase):
         self.assertEqual(trip['name'], self.trip.name)
         self.assertEqual(trip['cost'], self.trip.cost)
 
-    def test_trip_save(self):
+    def test_trip_save_validations(self):
         """
-        Test trip save
+        Test trip save validations
 
-        - Ensure trip is saved successfully;
-        - Ensure response data has the right structure;
-        - Ensure response data is expected one
+        - Test with None;
+        - Test with missing required data;
+        - Test with wrong email address
+        - Test with existing user (by email address);
         """
-        
+
+        # TODO: Enhance test with `parametrized` for better code quality
+        test_data = [
+            {
+                'payload': None,
+                'response': 'This field is required'
+            },
+            {
+                'payload': {'first_name': 'Test', 'last_name': 'Register'},
+                'response': 'This field is required'
+            },
+            {
+                'payload': {
+                    'first_name': 'Test',
+                    'last_name': 'Register',
+                    'email': 'email',
+                    'password': 'Abcd1234!'
+                },
+                'response': 'Enter a valid email address.'
+            },
+            {
+                'payload': {
+                    'first_name': 'Test',
+                    'last_name': 'Register',
+                    'email': 'demo@travel.com',
+                    'password': 'Abcd1234!'
+                },
+                'response': 'User with this email already exists.'
+            }
+        ]
+
+        url = reverse('register_user')
+
+        for data in test_data:
+            response = self.client.post(url, data['payload'], format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertIn(data['response'], str(response.data))

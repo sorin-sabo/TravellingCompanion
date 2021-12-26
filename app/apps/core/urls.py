@@ -9,7 +9,6 @@ from django.urls import path
 # Local App
 from apps.core import views
 
-
 urlpatterns = [
     path(
         route='register/',

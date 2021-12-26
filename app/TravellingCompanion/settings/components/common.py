@@ -1,5 +1,8 @@
 import os
+from pathlib import Path
+
 # -------------------------------------- GENERAL CONFIGURATION -------------------------------------
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -33,9 +36,7 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-TABBED_ADMIN_USE_JQUERY_UI = True
-
-CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/'
+CKEDITOR_BASEPATH = '/staticfiles/ckeditor/ckeditor/'
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 CKEDITOR_CONFIGS = {
   'default': {
@@ -49,9 +50,8 @@ CKEDITOR_CONFIGS = {
 # -------------------------------------- STATIC FILE CONFIGURATION ---------------------------------
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
-STATIC_ROOT = 'static'
-STATIC_URL = '/static/'
-STATICFILES_DIRS = ['templates/']
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 # -------------------------------------- END STATIC FILE CONFIGURATION -----------------------------
 
 # -------------------------------------- TEMPLATE CONFIGURATION ------------------------------------
@@ -59,7 +59,7 @@ STATICFILES_DIRS = ['templates/']
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['templates'],
+        'DIRS': [],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +132,6 @@ SESSION_EXPIRE_SECONDS = 3600  # 1 hour
 # --------------------------------------- END ADMIN SESSION CONFIGURATION --------------------------
 
 # --------------------------------------- PASSWORD POLICIES CONFIGURATION --------------------------
-SITE_ID = 1
 PASSWORD_DURATION_SECONDS = 36 * 60**3  # Require a password change each 90 days
 PASSWORD_HISTORY_COUNT = 12  # A history of 12 passwords used when changing password
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
