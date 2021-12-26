@@ -73,43 +73,48 @@ class TestTripCRUD(APITestCase):
 
         - Test with None;
         - Test with missing required data;
-        - Test with wrong email address
-        - Test with existing user (by email address);
+        - Test with wrong cost value
+        - Test with wrong start date < today
         """
 
-        # TODO: Enhance test with `parametrized` for better code quality
-        test_data = [
+        mock_data = [
             {
                 'payload': None,
                 'response': 'This field is required'
             },
             {
-                'payload': {'first_name': 'Test', 'last_name': 'Register'},
+                'payload': {
+                    "name": "Demo trip",
+                    "cost": 2000
+                },
                 'response': 'This field is required'
             },
             {
                 'payload': {
-                    'first_name': 'Test',
-                    'last_name': 'Register',
-                    'email': 'email',
-                    'password': 'Abcd1234!'
+                    "name": "Demo trip",
+                    "start_date": "2022-01-01",
+                    "cost": "test"
                 },
-                'response': 'Enter a valid email address.'
+                'response': 'A valid number is required.'
             },
             {
                 'payload': {
-                    'first_name': 'Test',
-                    'last_name': 'Register',
-                    'email': 'demo@travel.com',
-                    'password': 'Abcd1234!'
+                    "name": "Demo trip",
+                    "start_date": "2000-01-01",
+                    "cost": 2000
                 },
-                'response': 'User with this email already exists.'
+                'response': 'Trip start date must be higher or equal with current date.'
             }
         ]
 
-        url = reverse('register_user')
+        # Setup
+        factory = APIRequestFactory()
+        view = views.TripView.as_view()
 
-        for data in test_data:
-            response = self.client.post(url, data['payload'], format='json')
-            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-            self.assertIn(data['response'], str(response.data))
+        for data in mock_data:
+            with self.subTest(data=data):
+                request = factory.post(f'travel/trips/', data=data['payload'], format='json')
+                force_authenticate(request, user=self.user)
+                response = view(request)
+                self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+                self.assertIn(data['response'], str(response.data))
