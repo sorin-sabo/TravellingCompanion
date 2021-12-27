@@ -4,7 +4,7 @@ from django.db import models
 
 class TripPassenger(models.Model):
     """
-    Trip passenger is used to establish a M2M relationship
+    Trip passenger is used to establish an M2M relationship
     between trips and passenger(s).
     """
 

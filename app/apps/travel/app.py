@@ -12,7 +12,7 @@ class TravelAppConfig(AppConfig):
     Travel app config
     Used to:
         - Register Travel API as an application;
-        - Rename Travel API name in Django Admin;
+        - Rename Travel API names in Django Admin;
         - Register Travel API signals
     """
 

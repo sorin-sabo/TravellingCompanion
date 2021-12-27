@@ -30,7 +30,7 @@ def get_user_trips(user=None):
         trip_ids = [trip.id for trip in passenger_trips]
 
     # Get trips request user created
-    # (One could have removed himself but he can still manage trip)
+    # (One could have removed himself, but he can still manage trip)
     trips_owner = Trip.objects.filter(
         created_by=user
     )

@@ -76,6 +76,7 @@ It is assumed that:
    ```
 
 ## Run
+
 -   Upon docker run API server starts, and it's exposing:
 -   [Endpoints](http://localhost:24/api/)
 -   [Documentation](http://localhost:24/docs/)
@@ -87,43 +88,30 @@ It is assumed that:
     - PLEASE RUN ALL TESTS BEFORE EACH DEPLOY!
     - Using fallowing command:
         ```bash
-        docker-compose exec web python manage.py test --verbosity 2
+        docker-compose exec web python manage.py test --verbosity 2 --keepdb
         ```
     - Optional `--verbosity` displays more details of test results
+    - Optional `--keepdb` tells django framework that you have a test database.
     - Above command will create a test database from scratch using migration scripts
     - After all tests are done test database is dropped in case `--keepdb` parameter is not added
-    - In case you have a local test database change next configuration in the config.py file: 
-    (`TEST_DATABASE_NAME`) and add `-k` parameter to command as fallows:
-         ```bash
-        python manage.py test --keepdb --verbosity 2
-        ```
-        - `--keepdb` is an optional parameter which tells django framework that you
-        have a test database. Your local database will not be influenced by tests, but it will
-        be influenced by migrations that were not yet applied on it.
-       
+          
 -   **Run a specific test**:
     - Django provides a high flexibility for this purpose by adding a single parameter:
         - application name `apps.travel` or any other application:
             ```bash
-            python manage.py test apps.travel --verbosity 2
+            docker-compose exec web python manage.py test apps.travel --verbosity 2 --keepdb
             ```
         - application test `apps.travel.test_trip_view`
             ```bash
-            python manage.py test apps.travel.test_trip_view --verbosity 2
+            docker-compose exec web python manage.py test apps.travel.test_trip_view --verbosity 2 --keepdb
             ```
 -   **Always use fixtures to have test data**:
     - Fixtures can be added in test file before `setUp` function
-    - To obtain a fixture Json from an application run next command:
-        ```bash
-        python manage.py dumpdata app_name > fixture_test_file.json
-        ```
 
 *   **Important** 
     * If a test function is not working, check renaming it to `test_{function_name}`
     * Authentication for a test can be achieved by using:
         -  `force_authenticate` & `APIRequestFactory` from django rest framework. 
-        Those should be used just to test guest user authentication since other users
-        can have specific rights.
 
 ## Project standards
 

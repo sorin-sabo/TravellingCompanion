@@ -51,7 +51,7 @@ class TripView(generics.ListCreateAPIView):
 
         * Authorization: Only registered passengers can create a trip
         * Create trip in system for request user
-        * Returns trip saved details including it's internal identifier
+        * Returns trip saved details including its internal identifier
         * Raises 400 error in case trip payload is invalid
         """
 
@@ -141,7 +141,7 @@ class TripDetailsView(generics.RetrieveUpdateDestroyAPIView):
         """
         Trip delete
 
-        * Only passenger users are authorized to partial delete trip(s).
+        * Only passenger users are authorized to partially delete trip(s).
         * Delete trip by id.
         * Returns empty response with status 204
         * Raises 400 error in case trip to be deleted is owner by a different user.
